@@ -52,7 +52,8 @@ Anum-TK1/
 Karena ini kelompok C9, berdasarkan ketentuan di soal, kelompok bernomor ganjil menggunakan kode A.
   
 ### Kode    
-Note: kode juga bisa dieksekusi dengan command `python3`, tidak harus `python`, atau bisa juga klik tombol Run via GUI VsCode di file yang ingin dieksekusi, menyesuaikan saja  
+Note: kode juga bisa dieksekusi dengan command `python3`, tidak harus `python`, atau bisa juga klik tombol Run via GUI VS Code di file yang ingin dieksekusi, menyesuaikan saja    
+
 Eksekusi kode untuk nomor 1 dengan jalankan command di bawah ini:      
   
 **Wajib Berada di Direktori Nomor1 Sebelum Eksekusi Program**
