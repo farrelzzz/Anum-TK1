@@ -86,9 +86,6 @@ def validate_T(T: np.ndarray, tol: float = 1e-9) -> dict:
 
 
 if __name__ == "__main__":
-    import glob
-    import os
-
     files = [
         "T_16.csv",
         "T_32.csv",
