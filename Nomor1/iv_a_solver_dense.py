@@ -122,6 +122,9 @@ if __name__ == "__main__":
     from iv_reference_check import reference_pi
 
     for f, N in [
+        # file yang tidak diberi comment bisa di un-comment, 
+        # comment ini hanya untuk membatasi pengecekan ke N kecil agar perbandingannya lebih terlihat 
+        # kalau mau cek N besar, tinggal un-comment saja mereka
         ("T_16.csv", 16),
         ("T_32.csv", 32),
         ("T_64.csv", 64),
@@ -133,7 +136,7 @@ if __name__ == "__main__":
         B, b = build_B_b(T)
 
         pi_manual = solve_pi_dense(B, b)
-        pi_ref = reference_pi(T)  # numpy, hanya sanity-check
+        pi_ref = reference_pi(T)  # pi pembanding yang didapat dari numpy
 
         max_abs_diff = np.max(np.abs(pi_manual - pi_ref))
         r = np.linalg.norm(T.T @ pi_manual - pi_manual)
