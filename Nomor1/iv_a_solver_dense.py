@@ -122,9 +122,6 @@ if __name__ == "__main__":
     from iv_reference_check import reference_pi
 
     for f, N in [
-        # file yang tidak diberi comment bisa di un-comment, 
-        # comment ini hanya untuk membatasi pengecekan ke N kecil agar perbandingannya lebih terlihat 
-        # kalau mau cek N besar, tinggal un-comment saja mereka
         ("T_16.csv", 16),
         ("T_32.csv", 32),
         ("T_64.csv", 64),

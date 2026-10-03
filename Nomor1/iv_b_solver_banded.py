@@ -41,7 +41,7 @@ Pseudocode:
     function solve_banded(B, b, p, q):
         AB, perm <- banded_lu_partial_pivot(B, p, q)
         bp <- b[perm]
-        y  <- forward_substitution_banded(AB, bp, p)   # pakai L di AB
+        y  <- forward_substitution_banded(AB, bp, perm, p, q)   # pakai L di AB
         x  <- backward_substitution_banded(AB, y, p, q) # pakai U di AB (lebar p+q)
         return x
 """
@@ -84,7 +84,7 @@ def banded_lu_partial_pivot(B: np.ndarray, p: int, q: int):
         i_hi = min(N - 1, j + p)          # baris kandidat pivot (dalam band asli)
         col_hi = min(N - 1, j + p + q)    # batas kanan fill-in akibat pivoting
 
-        # --- cari pivot: |AB[row(i,j), j]| terbesar untuk i = j..i_hi ---
+        # cari pivot: |AB[row(i,j), j]| terbesar untuk i = j..i_hi 
         best_i = j
         best_val = abs(AB[_row(j, j, p, q), j])
         for i in range(j + 1, i_hi + 1):
@@ -97,16 +97,16 @@ def banded_lu_partial_pivot(B: np.ndarray, p: int, q: int):
             for col in range(j, col_hi + 1):
                 r1, r2 = _row(j, col, p, q), _row(best_i, col, p, q)
                 AB[r1, col], AB[r2, col] = AB[r2, col], AB[r1, col]
-            perm[[j, best_i]] = perm[[best_i, j]]
+            # perm[[j, best_i]] = perm[[best_i, j]]
+            perm[j] = best_i
 
         diag = AB[_row(j, j, p, q), j]
         if diag == 0.0:
             raise ZeroDivisionError(
-                f"Pivot nol di kolom {j} walau sudah partial pivoting -- "
-                f"matriks B singular secara numerik."
+                f"Pivot nol di kolom {j} walau sudah partial pivoting, matriks B singular secara numerik"
             )
 
-        # --- eliminasi, hanya di dalam band (+fill) ---
+        # eliminasi, hanya di dalam band (+fill)
         for i in range(j + 1, i_hi + 1):
             factor = AB[_row(i, j, p, q), j] / diag
             AB[_row(i, j, p, q), j] = factor  # simpan multiplier (L)
@@ -116,21 +116,25 @@ def banded_lu_partial_pivot(B: np.ndarray, p: int, q: int):
     return AB, perm
 
 
-def forward_substitution_banded(AB: np.ndarray, bp: np.ndarray, p: int, q: int) -> np.ndarray:
-    # L y = bp, L unit-lower-triangular dgn lower bandwidth p (multiplier di AB
-    N = bp.shape[0]
-    y = np.zeros(N)
-    for i in range(N):
-        k_lo = max(0, i - p)
-        s = bp[i]
-        for k in range(k_lo, i):
-            s -= AB[_row(i, k, p, q), k] * y[k]
-        y[i] = s  # diagonal L = 1
+def forward_substitution_banded(AB: np.ndarray, b: np.ndarray, perm: np.ndarray, p: int, q: int) -> np.ndarray:
+    N = b.shape[0]
+    y = b.astype(float).copy()
+    
+    # Substitusi berbasis kolom dengan mutasi permutasi on-the-fly
+    for j in range(N):
+        pivot_row = perm[j]
+        if pivot_row != j:
+            y[j], y[pivot_row] = y[pivot_row], y[j]
+        
+        i_hi = min(N - 1, j + p)
+        for i in range(j + 1, i_hi + 1):
+            y[i] -= AB[_row(i, j, p, q), j] * y[j]
+            
     return y
 
 
 def backward_substitution_banded(AB: np.ndarray, y: np.ndarray, p: int, q: int) -> np.ndarray:
-    # U x = y, U upper-triangular dgn upper bandwidth EFEKTIF (p+q) akibat fill-in
+    # U x = y, U upper-triangular dgn upper bandwidth efektif (p+q) akibat fill-in
     N = y.shape[0]
     x = np.zeros(N)
     for i in range(N - 1, -1, -1):
@@ -144,8 +148,7 @@ def backward_substitution_banded(AB: np.ndarray, y: np.ndarray, p: int, q: int) 
 
 def solve_banded(B: np.ndarray, b: np.ndarray, p: int, q: int) -> np.ndarray:
     AB, perm = banded_lu_partial_pivot(B, p, q)
-    bp = b[perm]
-    y = forward_substitution_banded(AB, bp, p, q)
+    y = forward_substitution_banded(AB, b, perm, p, q)
     x = backward_substitution_banded(AB, y, p, q)
     return x
 
@@ -164,9 +167,6 @@ if __name__ == "__main__":
     from iv_a_solver_dense import solve_pi_dense
 
     for f, N in [
-        # file yang tidak diberi comment bisa di un-comment, 
-        # comment ini hanya untuk membatasi pengecekan ke N kecil agar perbandingannya lebih terlihat 
-        # kalau mau cek N besar, tinggal un-comment saja mereka
         ("T_16.csv", 16),
         ("T_32.csv", 32),
         ("T_64.csv", 64),

@@ -46,10 +46,7 @@ def validate_T(T: np.ndarray, tol: float = 1e-9) -> dict:
     max_row_sum_err = float(row_sum_err.max())
     rows_ok = bool(np.all(row_sum_err <= tol))
 
-    # Indikasi irreducibility: graf ketetanggaan T (T_ij > tol berarti ada
-    # edge i->j) harus berupa satu komponen terhubung kuat (strongly
-    # connected). Dicek dengan BFS maju & mundur dari node 0; kalau semua
-    # node terjangkau di kedua arah -> indikasi irreducible.
+    # Indikasi irreducibility: graf ketetanggaan T (T_ij > tol berarti ada edge i->j) harus berupa satu komponen terhubung kuat
     adj = T > tol
 
     def reachable(adj_matrix, start):

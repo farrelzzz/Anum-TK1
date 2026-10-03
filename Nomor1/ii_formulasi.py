@@ -11,10 +11,9 @@ pertama nonsingular (mendukung argumen di laporan bagian ii).
     b = [1, 0, ..., 0]^T
 
 Solusi z dari B z = b lalu dinormalkan pi = z / (1^T z), karena B z = b
-hanya menjamin komponen pertama z sebanding dengan syarat normalisasi
-yang kita "titipkan" (z_1-like constraint), sedangkan skala z secara
-keseluruhan belum tentu memenuhi 1^T pi = 1. Normalisasi memaksa jumlah
-komponen menjadi tepat 1, sesuai syarat pada soal, yaitu 2.
+hanya menjamin komponen pertama z sebanding dengan syarat normalisasi (z_1-like constraint), 
+sedangkan skala z secara keseluruhan belum tentu memenuhi 1^T pi = 1. Normalisasi memaksa jumlah
+komponen menjadi tepat 1, sesuai syarat (2) pada soal
 """
 
 from __future__ import annotations
