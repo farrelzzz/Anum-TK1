@@ -1,9 +1,8 @@
 """
-ii_formulasi.py  (bagian ii -- Formulasi dan Penanganan Singularitas)
-===================================================================
-Bentuk matriks B dan vektor b dari T, sesuai definisi di soal, serta
-utilitas untuk membuktikan secara numerik bahwa B hasil penggantian baris
-pertama nonsingular (mendukung argumen di laporan bagian ii).
+bagian ii -- Formulasi dan Penanganan Singularitas
+Bentuk matriks B dan vektor b dari T, sesuai definisi di soal, 
+serta membuktikan secara numerik bahwa B hasil penggantian baris
+pertama nonsingular (mendukung argumen di laporan bagian ii nanti)
 
     A = I - T^T                (A pi = 0, A singular)
     B[0, :] = [1, 0, ..., 0]   (baris pertama diganti)
@@ -34,11 +33,10 @@ def build_B_b(T: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 def check_nonsingular(B: np.ndarray) -> dict:
     """
     Cek nonsingularity B secara numerik 
-    Di sini hanya menghitung nilai, bukan menyelesaikan SPL/faktorisasi utama, jadi pakai numpy di sini (harusnya masih) sesuai aturan):
+    Di sini hanya menghitung nilai, bukan menyelesaikan SPL/faktorisasi utama, jadi pakai numpy di sini (harusnya masih) sesuai aturan:
       - rank(B) via numpy.linalg.matrix_rank (SVD-based, hanya untuk cek, bukan untuk solve)
       - condition number via numpy.linalg.cond (default 2-norm)
-    B dengan rank penuh (= N) dan condition number berhingga (tidak inf/nan)
-    dianggap nonsingular secara numerik.
+    B dengan rank penuh (= N) dan condition number berhingga (tidak inf/nan) dianggap nonsingular secara numerik.
     """
     N = B.shape[0]
     rank = int(np.linalg.matrix_rank(B))

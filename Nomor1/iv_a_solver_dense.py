@@ -2,34 +2,10 @@
 solver_dense.py
 ================
 Solver (iv-a): faktorisasi LU dense dengan partial pivoting, diimplementasi
-manual (TANPA numpy.linalg.solve, numpy.linalg.lu, scipy.linalg.lu, atau
-fungsi solver/faktorisasi utama lain). numpy di sini hanya dipakai sebagai
-array container (indexing, alokasi) -- bukan untuk menyelesaikan SPL.
+manual (tanpa numpy.linalg.solve, numpy.linalg.lu, atau
+fungsi solver/faktorisasi utama lain). numpy di sini hanya dipakai sebagai array container (indexing, alokasi), bukan untuk menyelesaikan SPL.
 
-Notasi mengikuti soal: P B = L U, dengan P matriks permutasi (partial
-pivoting berbasis baris).
-
-Pseudocode:
-    function lu_decompose_partial_pivot(B):
-        U <- copy(B); L <- I; perm <- [0, 1, ..., N-1]
-        for k = 0 .. N-2:
-            # cari baris pivot: |U[i,k]| terbesar untuk i >= k
-            p <- argmax_{i=k..N-1} |U[i,k]|
-            if p != k:
-                tukar baris k dan p di U
-                tukar baris k dan p di L (hanya kolom < k)
-                tukar perm[k] dan perm[p]
-            for i = k+1 .. N-1:
-                L[i,k] <- U[i,k] / U[k,k]
-                U[i,k:] <- U[i,k:] - L[i,k] * U[k,k:]
-        return L, U, perm
-
-    function solve_dense(B, b):
-        L, U, perm <- lu_decompose_partial_pivot(B)
-        bp <- b[perm]                      # terapkan permutasi P ke b
-        y  <- forward_substitution(L, bp)  # L y = P b
-        x  <- backward_substitution(U, y)  # U x = y
-        return x
+Notasi mengikuti soal: P B = L U, dengan P matriks permutasi (partial pivoting seperti di kelas, hanya tukar baris).
 """
 
 from __future__ import annotations
@@ -38,9 +14,7 @@ import numpy as np
 
 def lu_decompose_partial_pivot(B: np.ndarray):
     """
-    Faktorisasi P B = L U dengan partial pivoting, manual (Gaussian
-    elimination). L unit-lower-triangular, U upper-triangular.
-
+    Faktorisasi P B = L U dengan partial pivoting, manual (Gaussian elimination). L unit-lower-triangular, U upper-triangular.
     Return:
         L    : (N,N) lower-triangular, diagonal 1
         U    : (N,N) upper-triangular
@@ -96,19 +70,15 @@ def backward_substitution(U: np.ndarray, y: np.ndarray) -> np.ndarray:
         x[i] = s / U[i, i]
     return x
 
-
+# bagian v dst bisa panggil fungsi ini
 def solve_dense(B: np.ndarray, b: np.ndarray) -> np.ndarray:
-    """
-    Interface utama solver dense (dipanggil dari eksperimen bagian v, dan
-    dari laporan bagian iv untuk uji skala kecil).
-    """
     L, U, perm = lu_decompose_partial_pivot(B)
     bp = b[perm]
     y = forward_substitution(L, bp)
     x = backward_substitution(U, y)
     return x
 
-
+# fungsi ini juga bisa
 def solve_pi_dense(B: np.ndarray, b: np.ndarray) -> np.ndarray:
     # z = solve_dense(B,b), lalu normalisasi pi = z / (1^T z)
     z = solve_dense(B, b)

@@ -1,49 +1,22 @@
 """
 solver_banded.py
 =================
-Solver (iv-b): algoritma gaya Thomas yang DIGENERALISASI untuk matriks
+Solver (iv-b): algoritma seperti Thomas tapi lebih umum untuk matriks
 banded dengan lower bandwidth p dan upper bandwidth q sembarang (bukan
-hanya tridiagonal p=q=1). Ini perlu karena B pada dataset punya p=1, q=2
-(lihat formulate.detect_bandwidth) -- bukan tridiagonal murni.
+hanya tridiagonal p=q=1). Alasannya, B pada dataset punya p=1, q=2 (cek pakai kode iii_struktur_matriks.py) bukan tridiagonal murni.
 
-Hanya menyimpan (2p+q+1) x N nilai (representasi pita + ruang cadangan
-untuk fill-in akibat pivoting), TIDAK PERNAH membentuk matriks dense N x N.
-Tidak memakai numpy.linalg.solve / scipy.linalg.solve_banded / library
-solver-SPL lain -- murni eliminasi manual di atas array numpy sebagai
-container.
+Di sini hanya menyimpan (2p+q+1) x N nilai (representasi pita + ruang cadangan
+untuk fill-in akibat pivoting), tidak membentuk matriks dense N x N.
+Tidak memakai numpy.linalg.solve, scipy.linalg.solve_banded, library solver-SPL lain. 
+Murni eliminasi manual di atas array numpy sebagai container
 
 Kenapa ruang (2p+q+1) baris, bukan (p+q+1) saja?
   Saat partial pivoting menukar baris j dengan baris j+i (i <= p), baris
   yang naik ke posisi j bisa punya entri sejauh kolom j+p (bukan cuma
-  j+q seperti baris asli di posisi j). Jadi upper bandwidth EFEKTIF bisa
+  j+q seperti baris asli di posisi j). Jadi upper bandwidth efektif bisa
   melebar dari q menjadi (p+q) selama faktorisasi. Supaya tidak perlu
   realokasi/fallback ke dense, kita sediakan p baris ekstra di atas sejak
-  awal (= workspace fill-in), mengikuti skema band-storage ala LAPACK
-  (dgbtrf/dgbsv).
-
-Pseudocode:
-    function banded_lu_partial_pivot(B, p, q):
-        AB <- band_storage(B, p, q)   # (2p+q+1) x N, p baris atas = 0 (fill)
-        perm <- [0, ..., N-1]
-        for j = 0 .. N-1:
-            i_hi <- min(N-1, j+p)
-            # cari pivot di antara baris j..i_hi pada kolom j
-            pivot <- argmax_{i=j..i_hi} |AB[row(i,j), j]|
-            jika pivot != j: tukar baris j & pivot (hanya kolom j..j+p+q),
-                             catat di perm
-            for i = j+1 .. i_hi:
-                factor <- AB[row(i,j), j] / AB[row(j,j), j]
-                simpan factor sbg L[i,j]
-                for col = j+1 .. min(j+p+q, N-1):
-                    AB[row(i,col), col] -= factor * AB[row(j,col), col]
-        return AB, perm
-
-    function solve_banded(B, b, p, q):
-        AB, perm <- banded_lu_partial_pivot(B, p, q)
-        bp <- b[perm]
-        y  <- forward_substitution_banded(AB, bp, perm, p, q)   # pakai L di AB
-        x  <- backward_substitution_banded(AB, y, p, q) # pakai U di AB (lebar p+q)
-        return x
+  awal (= workspace fill-in), mengikuti skema band-storage seperti LAPACK (dgbtrf/dgbsv).
 """
 
 from __future__ import annotations

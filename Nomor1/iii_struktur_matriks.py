@@ -1,9 +1,8 @@
 """
-iii_struktur_matriks.py  (bagian iii -- Identifikasi Struktur Matriks)
-====================================================================
+bagian iii -- Identifikasi Struktur Matriks
 Deteksi otomatis lower/upper bandwidth (p, q) dari B, verifikasi bahwa
 penggantian baris pertama tidak merusak struktur banded, konversi ke
-representasi pita padat, dan perbandingan kebutuhan memori dense vs band.
+representasi pita dense, dan perbandingan kebutuhan memori dense vs band.
 """
 
 from __future__ import annotations
@@ -29,12 +28,12 @@ def detect_bandwidth(B: np.ndarray, tol: float = 1e-12) -> tuple[int, int]:
 def band_from_dense(B: np.ndarray, p: int, q: int) -> np.ndarray:
     """
     Konversi matriks dense B (N x N, banded dengan lower bandwidth p dan
-    upper bandwidth q) menjadi representasi pita padat ala LAPACK:
+    upper bandwidth q) menjadi representasi pita padat seperti LAPACK:
     array berukuran (p + q + 1) x N, dengan
         ab[q + i - j, j] = B[i, j]   untuk max(0, j-q) <= i <= min(N-1, j+p)
     Baris ke-0 representasi ini adalah diagonal ke-q (paling atas),
     baris terakhir adalah diagonal ke-(-p) (paling bawah).
-    Ini HANYA transformasi penyimpanan (reshape), bukan operasi solver.
+    Ini cuma transformasi penyimpanan (reshape), bukan operasi solver, jadi (harusnya) masih aman 
     """
     N = B.shape[0]
     ab = np.zeros((p + q + 1, N))
@@ -58,9 +57,9 @@ def band_memory_bytes(N: int, p: int, q: int, itemsize: int = 8) -> int:
 
 def band_preserved_after_row_replace(T: np.ndarray, tol: float = 1e-12) -> bool:
     """
-    Verifikasi klaim di poin iii: penggantian baris pertama A (-> B) TIDAK
+    Verifikasi klaim di poin iii: penggantian baris pertama A (-> B) tidak
     merusak struktur banded, karena baris yang diganti ([1,0,...,0]) justru
-    punya bandwidth lebih SEMPIT (hanya elemen diagonal) daripada baris
+    punya bandwidth lebih sempit (hanya elemen diagonal) daripada baris
     aslinya. Fungsi ini membandingkan bandwidth A=I-T^T (sebelum ganti
     baris) dengan B (sesudah ganti baris) hasilnya harus sama atau B
     punya bandwidth <= A, membuktikan band tidak melebar.

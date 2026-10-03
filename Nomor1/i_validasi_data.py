@@ -1,11 +1,10 @@
 """
-i_validasi_data.py  (bagian i -- Validasi Data)
-==============================================
+bagian i - Validasi Data
 Baca matriks transisi T dari CSV dan validasi:
   - dimensi persegi (N x N)
   - semua elemen >= 0
   - setiap baris berjumlah 1
-  - indikasi steady state tunggal (irreducible & aperiodic)
+  - indikasi steady state tunggal (irreducible & aperiodic, dicek lewat graf ketetanggaan T dan elemen diagonal > 0)
 
 load_T() dipakai juga oleh bagian lain (formulasi, struktur matriks, solver, dst) 
 sebagai titik masuk baca data
@@ -24,15 +23,6 @@ def load_T(path: str) -> np.ndarray:
 
 
 def validate_T(T: np.ndarray, tol: float = 1e-9) -> dict:
-    """
-    Validasi dasar matriks transisi T:
-      - dimensi harus persegi (N x N)
-      - semua elemen >= 0 (dengan toleransi numerik kecil)
-      - setiap baris berjumlah 1
-      - indikasi apakah steady state kemungkinan tunggal (irreducible &
-        aperiodic, dicek lewat graf ketetanggaan T dan elemen diagonal > 0)
-    Mengembalikan dict berisi status & detail supaya bisa dilaporkan.
-    """
     n_rows, n_cols = T.shape
     is_square = (n_rows == n_cols)
     N = n_rows
