@@ -1,5 +1,5 @@
 """
-validasi_data.py  (bagian i -- Validasi Data)
+i_validasi_data.py  (bagian i -- Validasi Data)
 ==============================================
 Baca matriks transisi T dari CSV dan validasi:
   - dimensi persegi (N x N)
@@ -7,9 +7,8 @@ Baca matriks transisi T dari CSV dan validasi:
   - setiap baris berjumlah 1
   - indikasi steady state tunggal (irreducible & aperiodic)
 
-load_T() dipakai juga oleh modul lain (formulasi.py, struktur_matriks.py,
-solver_*.py) sebagai titik masuk baca data -- diletakkan di sini karena
-secara logis "baca & validasi data" adalah langkah pertama.
+load_T() dipakai juga oleh bagian lain (formulasi, struktur matriks, solver, dst) 
+sebagai titik masuk baca data
 """
 
 from __future__ import annotations
@@ -17,7 +16,7 @@ import numpy as np
 
 
 def load_T(path: str) -> np.ndarray:
-    """Baca matriks transisi T dari file CSV. I/O saja, bukan solver."""
+    # Baca matriks transisi T dari file CSV
     T = np.loadtxt(path, delimiter=",")
     if T.ndim != 2:
         raise ValueError(f"{path}: hasil baca bukan matriks 2D, shape={T.shape}")
@@ -31,8 +30,7 @@ def validate_T(T: np.ndarray, tol: float = 1e-9) -> dict:
       - semua elemen >= 0 (dengan toleransi numerik kecil)
       - setiap baris berjumlah 1
       - indikasi apakah steady state kemungkinan tunggal (irreducible &
-        aperiodic, dicek secara praktis lewat graf ketetanggaan T dan
-        elemen diagonal > 0)
+        aperiodic, dicek lewat graf ketetanggaan T dan elemen diagonal > 0)
     Mengembalikan dict berisi status & detail supaya bisa dilaporkan.
     """
     n_rows, n_cols = T.shape
@@ -71,9 +69,7 @@ def validate_T(T: np.ndarray, tol: float = 1e-9) -> dict:
     bwd = reachable(adj.T, 0)
     irreducible_indication = bool(np.all(fwd) and np.all(bwd))
 
-    # Indikasi aperiodic (cukup untuk kasus praktis): ada self-loop di
-    # setidaknya satu state (T_ii > 0), umum terjadi pada rantai "corridor"
-    # seperti pada soal ini.
+    # Indikasi aperiodic: ada self-loop di setidaknya satu state (T_ii > 0)
     aperiodic_indication = bool(np.any(np.diag(T) > tol))
 
     return {
