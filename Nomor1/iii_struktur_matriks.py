@@ -62,7 +62,7 @@ def band_preserved_after_row_replace(T: np.ndarray, tol: float = 1e-12) -> bool:
     merusak struktur banded, karena baris yang diganti ([1,0,...,0]) justru
     punya bandwidth lebih SEMPIT (hanya elemen diagonal) daripada baris
     aslinya. Fungsi ini membandingkan bandwidth A=I-T^T (sebelum ganti
-    baris) dengan B (sesudah ganti baris) -- hasilnya harus SAMA atau B
+    baris) dengan B (sesudah ganti baris) hasilnya harus sama atau B
     punya bandwidth <= A, membuktikan band tidak melebar.
     """
     from ii_formulasi import build_B_b
