@@ -57,6 +57,7 @@ if __name__ == "__main__":
     returns = return_price(prices)
     A, b = create_matrix_SETAR(returns)
     
+    #Output tester <Range/Size>
     print(f"Jumlah Harga (P): {len(prices)}") #Current P 
     print(f"Jumlah Return (R): {len(returns)}") #Current R
     print(f"Dimensi Matriks A: {A.shape}") #Current M x 6 (lag order, p=2)
