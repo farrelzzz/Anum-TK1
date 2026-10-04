@@ -13,7 +13,7 @@
 | numpy	| disarankan 1.24+ (array, I/O CSV, operasi minor, bukan solver utama) |
 | Matplotlib | 3.x+ | Grafik bagian vii Nomor 2 |
   
-Jika belum ada `numpy`, bisa dipasang dengan perintah ini:  
+Jika belum ada `numpy` dan/atau `Matplotlib`, bisa dipasang dengan perintah ini:  
 ```
 pip install numpy matplotlib
 ```    
@@ -49,7 +49,12 @@ Nomor1/
 ├── iii_struktur_matriks.py      (bagian iii)  
 ├── iv_a_solver_dense.py          (bagian iv-a)  
 ├── iv_b_solver_banded.py         (bagian iv-b)  
-└── iv_reference_check.py       (HANYA alat bantu verifikasi, bukan solver laporan)     
+├── iv_reference_check.py       (HANYA alat bantu verifikasi, bukan solver laporan)
+├──         (bagian v)  
+├──         (bagian vi)  
+├──         (bagian vii)  
+├──         (bagian viii)  
+└──         (bagian ix)  
 ``` 
 
 ### Dataset
