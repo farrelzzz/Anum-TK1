@@ -1,0 +1,13 @@
+Metrik,Nilai
+jumlah_baris,300
+jumlah_parameter,6
+rank_A,6
+condition_number_2_A,192.60541021575756
+galat_absolut_maks_AtA_float32_vs_float64,1.610400881535412e-07
+galat_relatif_maks_AtA,8.25846605915596e-10
+norma_kolom_1,13.96424004376894
+norma_kolom_2,0.12973968430419794
+norma_kolom_3,0.13824168672867918
+norma_kolom_4,10.246950765959598
+norma_kolom_5,0.10095428091054807
+norma_kolom_6,0.08897615026952142

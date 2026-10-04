@@ -1,0 +1,7 @@
+Parameter,Nilai,Interpretasi
+alpha1,0.0015133742243926165,intersep rezim bullish
+phi11,0.17215289727492183,positif: pengaruh searah dengan return lag (kecenderungan momentum)
+phi12,0.16607285095297852,positif: pengaruh searah dengan return lag (kecenderungan momentum)
+alpha2,-0.0012126885538670726,intersep rezim bearish
+phi21,-0.3603768239374075,negatif: pengaruh berlawanan arah dengan return lag (kecenderungan mean-reverting)
+phi22,-0.10980803854712609,negatif: pengaruh berlawanan arah dengan return lag (kecenderungan mean-reverting)
